@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据抓取工具</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft YaHei", Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #1890ff; }
+        h2 { color: #1890ff; margin: 25px 0 15px 0; font-size: 18px; }
+        .section { background: #fafafa; padding: 20px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #1890ff; }
+        .bookmarklet { display: inline-block; background: #1890ff; color: white; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; margin: 10px 5px 10px 0; cursor: move; }
+        .bookmarklet:hover { background: #40a9ff; }
+        .code-block { background: #282c34; color: #abb2bf; padding: 15px; border-radius: 4px; font-family: Consolas, Monaco, monospace; font-size: 12px; overflow-x: auto; margin: 10px 0; }
+        .step { margin: 10px 0; padding: 10px; background: white; border-radius: 4px; }
+        .step-number { display: inline-block; width: 24px; height: 24px; background: #1890ff; color: white; border-radius: 50%; text-align: center; line-height: 24px; margin-right: 10px; font-size: 12px; }
+        .warning { background: #fff7e6; border: 1px solid #ffd591; padding: 15px; border-radius: 4px; margin: 15px 0; }
+        .warning-title { color: #fa8c16; font-weight: bold; margin-bottom: 5px; }
+        .success { background: #f6ffed; border: 1px solid #b7eb8f; padding: 15px; border-radius: 4px; margin: 15px 0; }
+        .output-area { background: #f6f6f6; border: 1px solid #d9d9d9; padding: 15px; border-radius: 4px; min-height: 100px; font-family: monospace; white-space: pre-wrap; }
+        .btn { display: inline-block; padding: 8px 16px; background: #1890ff; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        .btn:hover { background: #40a9ff; }
+        .btn-secondary { background: #52c41a; }
+        .btn-secondary:hover { background: #73d13d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 数据抓取工具</h1>
+        
+        <div class="warning">
+            <div class="warning-title">⚠️ 使用说明</div>
+            <p>将下方的书签脚本拖拽到浏览器书签栏，然后在对应页面点击即可抓取数据。</p>
+        </div>
+
+        <!-- 企微会话数据抓取 -->
+        <h2>1. 企微会话数据抓取</h2>
+        <div class="section">
+            <h3>📖 使用步骤：</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                登录企微后台，进入会话统计页面
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                点击书签栏中的"抓取企微数据"按钮
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                数据将自动复制到剪贴板，粘贴发给我即可
+            </div>
+            
+            <h3 style="margin-top: 20px;">🔗 书签脚本：</h3>
+            <a class="bookmarklet" href="javascript:(function(){const tables=document.querySelectorAll('table');let result='';let weekData={sessions:0,orders:0,p4Orders:0};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('会话量'))weekData.sessions=parseInt(value)||0;if(label.includes('派单'))weekData.orders=parseInt(value)||0;if(label.includes('P4'))weekData.p4Orders=parseInt(value)||0;}});});result=`企微数据：\n会话量：${weekData.sessions}\n派单工：${weekData.orders}\nP4工：${weekData.p4Orders}`;navigator.clipboard.writeText(result).then(()=>{alert('数据已复制到剪贴板！\n\n'+result);}).catch(()=>{prompt('请手动复制以下数据：',result);});})();">📥 抓取企微数据</a>
+            
+            <p style="color: #666; font-size: 13px; margin-top: 10px;">
+                💡 拖拽上方按钮到书签栏即可使用
+            </p>
+            
+            <h3 style="margin-top: 20px;">📋 手动脚本（备用）：</h3>
+            <div class="code-block">javascript:(function(){const tables=document.querySelectorAll('table');let result='';let weekData={sessions:0,orders:0,p4Orders:0};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('会话量'))weekData.sessions=parseInt(value)||0;if(label.includes('派单'))weekData.orders=parseInt(value)||0;if(label.includes('P4'))weekData.p4Orders=parseInt(value)||0;}});});result=`企微数据：\n会话量：${weekData.sessions}\n派单工：${weekData.orders}\nP4工：${weekData.p4Orders}`;navigator.clipboard.writeText(result).then(()=>{alert('数据已复制到剪贴板！\n\n'+result);}).catch(()=>{prompt('请手动复制以下数据：',result);});})();</div>
+        </div>
+
+        <!-- 电话数据抓取 -->
+        <h2>2. 电话数据抓取（七鱼后台）</h2>
+        <div class="section">
+            <h3>📖 使用步骤：</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                登录七鱼后台，进入通话统计页面
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                点击书签栏中的"抓取电话数据"按钮
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                数据将自动复制到剪贴板，粘贴发给我即可
+            </div>
+            
+            <h3 style="margin-top: 20px;">🔗 书签脚本：</h3>
+            <a class="bookmarklet" href="javascript:(function(){const tables=document.querySelectorAll('table');let result='';let phoneData={calls:0,connectRate:'0%'};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('接入量')||label.includes('呼入量'))phoneData.calls=parseInt(value)||0;if(label.includes('接通率'))phoneData.connectRate=value;}});});result=`电话数据：\n接入量：${phoneData.calls}\n接通率：${phoneData.connectRate}`;navigator.clipboard.writeText(result).then(()=>{alert('数据已复制到剪贴板！\n\n'+result);}).catch(()=>{prompt('请手动复制以下数据：',result);});})();">📞 抓取电话数据</a>
+            
+            <p style="color: #666; font-size: 13px; margin-top: 10px;">
+                💡 拖拽上方按钮到书签栏即可使用
+            </p>
+            
+            <h3 style="margin-top: 20px;">📋 手动脚本（备用）：</h3>
+            <div class="code-block">javascript:(function(){const tables=document.querySelectorAll('table');let result='';let phoneData={calls:0,connectRate:'0%'};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('接入量')||label.includes('呼入量'))phoneData.calls=parseInt(value)||0;if(label.includes('接通率'))phoneData.connectRate=value;}});});result=`电话数据：\n接入量：${phoneData.calls}\n接通率：${phoneData.connectRate}`;navigator.clipboard.writeText(result).then(()=>{alert('数据已复制到剪贴板！\n\n'+result);}).catch(()=>{prompt('请手动复制以下数据：',result);});})();</div>
+        </div>
+
+        <!-- 二线解决率抓取 -->
+        <h2>3. 二线解决率数据抓取</h2>
+        <div class="section">
+            <h3>📖 使用步骤：</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                打开二线解决率统计页面
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                点击书签栏中的"抓取解决率"按钮
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                数据将自动复制到剪贴板，粘贴发给我即可
+            </div>
+            
+            <h3 style="margin-top: 20px;">🔗 书签脚本：</h3>
+            <a class="bookmarklet" href="javascript:(function(){const tables=document.querySelectorAll('table');let result='二线解决率数据：\n';let dataList=[];tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach((row,idx)=>{if(idx===0)return;const cells=row.querySelectorAll('td');if(cells.length>=4){const period=cells[0].innerText.trim();const dailyRate=cells[1].innerText.trim();const weeklyRate=cells[2].innerText.trim();const orderCount=cells[3].innerText.trim();if(period){dataList.push(`${period} | 日解决率:${dailyRate} | 周解决率:${weeklyRate} | 工单量:${orderCount}`);}}});});result+=dataList.join('\n');navigator.clipboard.writeText(result).then(()=>{alert('数据已复制到剪贴板！\n\n'+result);}).catch(()=>{prompt('请手动复制以下数据：',result);});})();">📊 抓取解决率</a>
+            
+            <p style="color: #666; font-size: 13px; margin-top: 10px;">
+                💡 拖拽上方按钮到书签栏即可使用
+            </p>
+        </div>
+
+        <!-- 如何添加书签 -->
+        <h2>📌 如何添加书签脚本</h2>
+        <div class="section">
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>显示书签栏</strong>：按 <code>Ctrl+Shift+B</code>（Windows）或 <code>Cmd+Shift+B</code>（Mac）
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>拖拽添加</strong>：用鼠标拖拽上方的书签按钮到书签栏
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>使用</strong>：在对应页面点击书签即可抓取数据
+            </div>
+        </div>
+
+        <!-- 数据格式说明 -->
+        <h2>📝 数据格式说明</h2>
+        <div class="section">
+            <h3>你发给我的数据格式示例：</h3>
+            <div class="code-block">企微数据：
+会话量：1508
+派单工：334
+P4工：145
+
+电话数据：
+接入量：295
+接通率：84.00%
+
+二线解决率数据：
+12.26~1.8 | 日解决率:47.04% | 周解决率:76.30% | 工单量:932
+1.9~1.15 | 日解决率:42.21% | 周解决率:64.89% | 工单量:523
+...</div>
+            <p style="color: #666; font-size: 13px; margin-top: 10px;">
+                💡 发送上述格式的数据给我，我会自动更新报表
+            </p>
+        </div>
+
+        <div class="success">
+            <strong>✅ 提示</strong>
+            <p>如果书签脚本无法正常工作，可以手动复制"手动脚本"部分的代码，然后在浏览器控制台（F12）中粘贴执行。</p>
+        </div>
+    </div>
+</body>
+</html>

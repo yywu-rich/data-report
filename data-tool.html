@@ -5,161 +5,401 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>售后数据抓取工具</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: "Microsoft YaHei", Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        h1 { color: #333; margin-bottom: 10px; }
-        .subtitle { color: #666; font-size: 14px; margin-bottom: 30px; }
-        h2 { color: #1890ff; margin: 25px 0 15px 0; font-size: 18px; }
-        .section { background: #fafafa; padding: 20px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #1890ff; }
-        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin: 5px; }
-        .btn-primary { background: #1890ff; color: white; }
-        .btn-primary:hover { background: #40a9ff; }
-        .bookmarklet { display: inline-block; background: #07c160; color: white; padding: 15px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px 5px; cursor: move; font-size: 16px; }
-        .bookmarklet:hover { opacity: 0.9; }
-        .phone { background: #ff6a00; }
-        .info-box { background: #e6f7ff; border: 1px solid #91d5ff; padding: 15px; border-radius: 4px; margin: 15px 0; }
-        .period-display { background: #722ed1; color: white; padding: 15px 25px; border-radius: 8px; font-size: 18px; font-weight: bold; display: inline-block; margin: 10px 0; }
-        .quick-btns { margin: 15px 0; }
-        .quick-btn { background: #f0f0f0; border: 1px solid #d9d9d9; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin: 5px; font-size: 13px; }
-        .quick-btn:hover { background: #1890ff; color: white; border-color: #1890ff; }
-        .tips { background: #fffbe6; border: 1px solid #ffe58f; padding: 15px; border-radius: 4px; margin: 10px 0; font-size: 13px; }
-        .data-preview { background: #f5f5f5; padding: 15px; border-radius: 4px; margin-top: 10px; font-family: monospace; white-space: pre; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .card h2 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .quick-btns {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .quick-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quick-btn:hover {
+            transform: translateY(-1px);
+        }
+        .quick-btn.prev {
+            background: #e8f4ff;
+            color: #1890ff;
+        }
+        .quick-btn.next {
+            background: #f6ffed;
+            color: #52c41a;
+        }
+        .period-preview {
+            background: #f0f5ff;
+            border: 2px solid #1890ff;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 16px;
+        }
+        .period-preview .label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        .period-preview .value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1890ff;
+        }
+        .copy-btn {
+            width: 100%;
+            padding: 14px;
+            background: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        .copy-btn:hover {
+            background: #40a9ff;
+        }
+        .section-title {
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+            margin: 20px 0 12px;
+        }
+        .guide-box {
+            background: #fffbe6;
+            border: 1px solid #ffe58f;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .guide-box h3 {
+            font-size: 14px;
+            color: #d48806;
+            margin-bottom: 8px;
+        }
+        .guide-box ol {
+            margin-left: 20px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.8;
+        }
+        .data-display {
+            background: #f6ffed;
+            border: 2px solid #52c41a;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        .data-display .data-item {
+            font-size: 16px;
+            margin: 8px 0;
+            color: #333;
+        }
+        .data-display .data-value {
+            font-weight: bold;
+            color: #52c41a;
+            font-size: 20px;
+        }
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .input-group button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #1890ff;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .input-group button:hover {
+            background: #40a9ff;
+        }
+        .result-box {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .alert {
+            background: #fff1f0;
+            border: 1px solid #ffccc7;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: #f5222d;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📊 售后数据抓取工具</h1>
-        <p class="subtitle">从网易七鱼后台抓取周期数据</p>
-
-        <!-- 日期选择 -->
-        <h2>第一步：选择周期</h2>
-        <div class="section">
+        <h1>售后数据抓取工具</h1>
+        
+        <div class="card">
+            <h2>第一步：选择日期周期</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>开始日期</label>
+                    <input type="date" id="startDate" value="">
+                </div>
+                <div class="form-group">
+                    <label>结束日期</label>
+                    <input type="date" id="endDate" value="">
+                </div>
+            </div>
             <div class="quick-btns">
-                <span style="font-weight: bold;">快速选择：</span>
-                <button class="quick-btn" onclick="setWeek(-1)">上周</button>
-                <button class="quick-btn" onclick="setWeek(0)">本周</button>
+                <button class="quick-btn prev" onclick="setPeriod('prev')">上周</button>
+                <button class="quick-btn next" onclick="setPeriod('current')">本周</button>
             </div>
-            
-            <div class="form-group" style="margin: 15px 0;">
-                <label style="display: inline-block; width: 80px; font-weight: bold;">开始日期：</label>
-                <input type="date" id="startDate" value="" style="padding: 8px; border: 1px solid #d9d9d9; border-radius: 4px;">
-                <span style="color: #999; margin-left: 10px;">例: 2026-04-24</span>
-            </div>
-            <div class="form-group" style="margin: 15px 0;">
-                <label style="display: inline-block; width: 80px; font-weight: bold;">结束日期：</label>
-                <input type="date" id="endDate" value="" style="padding: 8px; border: 1px solid #d9d9d9; border-radius: 4px;">
-                <span style="color: #999; margin-left: 10px;">例: 2026-04-30</span>
-            </div>
-            
-            <div class="period-display" id="periodDisplay">请选择日期</div>
-            <br>
-            <button class="btn btn-primary" onclick="copyPeriod()">📋 复制周期字符串</button>
-        </div>
-
-        <!-- 书签 -->
-        <h2>第二步：抓取数据</h2>
-        <div class="section">
-            <div class="info-box">
-                <strong>📍 使用方法：</strong><br>
-                1. 选择上方日期周期 → 2. 打开七鱼后台"团队报表"页面 → 3. 筛选"售后服务"组 → 4. 点击对应书签 → 5. 复制数据
-            </div>
-            
-            <p style="margin: 15px 0 10px 0; font-weight: bold;">🟢 企微数据（总览 → 客户来源饼图）：</p>
-            <a class="bookmarklet" href="javascript:(function(){var s=document.getElementById('startDate')?document.getElementById('startDate').value:null;var e=document.getElementById('endDate')?document.getElementById('endDate').value:null;if(!s||!e){s=prompt('开始日期:');e=prompt('结束日期:');}var dateRange=s+' - '+e;var wechatSession=0;document.querySelectorAll('*').forEach(function(el){var text=el.innerText||'';if(text.includes('企业微信')&&text.includes('广东盈世')){var match=text.match(/企业微信[^0-9]*([0-9]+)个/);if(match)wechatSession=parseInt(match[1]);}});var result='企业微信-客户服务-广东盈世计算机科技有限公司\n'+wechatSession+'个\n\n周期: '+dateRange;alert('企微数据已复制！\n\n'+result);navigator.clipboard.writeText(result);})();">🟢 企微数据</a>
-            
-            <p style="margin: 15px 0 10px 0; font-weight: bold;">🟠 电话数据（团队报表 → 呼入数据）：</p>
-            <a class="bookmarklet phone" href="javascript:(function(){var s=document.getElementById('startDate')?document.getElementById('startDate').value:null;var e=document.getElementById('endDate')?document.getElementById('endDate').value:null;if(!s||!e){s=prompt('开始日期:');e=prompt('结束日期:');}var dateRange=s+' - '+e;var callIn=0,connIn=0,connectRate='0%';var pageText=document.body.innerText;var lines2=pageText.split('\n');for(var i=0;i<lines2.length;i++){var line=lines2[i].trim();if((line==='呼入量'||line==='总量')&&callIn===0){var nextLine=lines2[i+1]?lines2[i+1].trim():'';var m=nextLine.match(/^(\d+)/);if(m)callIn=parseInt(m[1]);}if(line==='呼入接通量'){var nextLine=lines2[i+1]?lines2[i+1].trim():'';var m=nextLine.match(/^(\d+)/);if(m)connIn=parseInt(m[1]);}if(line==='接通率'||line==='队列接通率'){var nextLine=lines2[i+1]?lines2[i+1].trim():'';var m=nextLine.match(/([\d.]+%)/);if(m)connectRate=m[1];}}if(callIn>0&&connIn>0&&connectRate==='0%'){connectRate=(connIn/callIn*100).toFixed(1)+'%';}var result='呼入量 '+callIn+' 接通率 '+connectRate;alert('电话数据已复制！\n\n'+result+'\n\n周期: '+dateRange);navigator.clipboard.writeText(result);})();">🟠 电话数据</a>
-            
-            <div class="tips">
-                <strong>💡 提示：</strong><br>
-                • 企微数据：网易七鱼 → 总览 → 滚动到"客户来源"饼图<br>
-                • 电话数据：网易七鱼 → 呼叫中心 → 团队报表 → 筛选"售后服务"组 → 呼入数据表格
+            <div class="period-preview">
+                <div class="label">当前周期</div>
+                <div class="value" id="periodStr">请选择日期</div>
             </div>
         </div>
         
-        <!-- 数据预览 -->
-        <h2>第三步：复制给AI</h2>
-        <div class="section">
-            <p>将以下内容复制发给AI：</p>
-            <div class="data-preview" id="dataPreview">等待抓取数据...</div>
-            <br>
-            <button class="btn btn-primary" onclick="copyAll()">📋 一键复制全部数据</button>
+        <div class="card">
+            <h2>第二步：复制数据给AI</h2>
+            <div class="input-group">
+                <input type="text" id="callIn" placeholder="呼入量" value="">
+                <input type="text" id="connectRate" placeholder="接通率 如:83%">
+                <button onclick="copyToAI()">复制给AI</button>
+            </div>
+            <div class="result-box" id="resultBox">
+周期: 26年(X.XX-X.XX日)
+电话数据:
+呼入量: XXX
+接通率: XX%
+
+📊 数据后台统计结果
+==================
+时间范围: 2026-XX-XX / 2026-XX-XX
+
+一线周提单量: XXX 个
+一线自行处理率: 0.XXXX
+
+==================
+请复制以上数据发送给AI助手</div>
+        </div>
+        
+        <div class="card">
+            <h2>第三步：使用说明</h2>
+            <div class="guide-box">
+                <h3>操作流程</h3>
+                <ol>
+                    <li>选择日期周期（上周/本周按钮会自动设置）</li>
+                    <li>在七鱼后台「团队报表」页面筛选相同日期+售后服务组</li>
+                    <li>查看呼入量和接通率，填入上方输入框</li>
+                    <li>点击「复制给AI」按钮</li>
+                    <li>粘贴发送给AI</li>
+                </ol>
+            </div>
+            <div class="guide-box">
+                <h3>数据位置（团队报表页面）</h3>
+                <ol>
+                    <li><strong>呼入量</strong>：顶部「团队业务指标」→ 呼入量</li>
+                    <li><strong>接通率</strong>：下方表格「总计」行 → 接通率</li>
+                </ol>
+            </div>
         </div>
     </div>
-
+    
     <script>
-        function formatDate(date) {
-            var year = date.getFullYear();
-            var month = (date.getMonth() + 1).toString().padStart(2, '0');
-            var day = date.getDate().toString().padStart(2, '0');
-            return year + '-' + month + '-' + day;
-        }
-
-        function setWeek(offset) {
-            var today = new Date();
-            var dayOfWeek = today.getDay();
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 默认设置为本周（上周五到本周四）
+            setPeriod('current');
             
-            // 计算本周四的日期
-            var thisThursday = new Date(today);
+            // 监听日期变化
+            document.getElementById('startDate').addEventListener('change', updatePeriod);
+            document.getElementById('endDate').addEventListener('change', updatePeriod);
+        });
+        
+        function setPeriod(type) {
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0=周日, 1=周一, ..., 6=周六
+            
+            // 计算本周四
+            let thisThu = new Date(today);
             if (dayOfWeek === 0) {
-                thisThursday.setDate(today.getDate() - 3);
+                thisThu.setDate(today.getDate() - 3);
             } else if (dayOfWeek <= 4) {
-                // 周一到周四：本週四就是今天
+                // 周一到周四：本周四 = 今天
             } else {
-                thisThursday.setDate(today.getDate() - (dayOfWeek - 4));
+                thisThu.setDate(today.getDate() - (dayOfWeek - 4));
             }
             
             // 上周四 = 本周四 - 7天
-            var lastThu = new Date(thisThursday);
-            lastThu.setDate(thisThursday.getDate() - 7);
+            const lastThu = new Date(thisThu);
+            lastThu.setDate(thisThu.getDate() - 7);
             
             // 上周五 = 上周四 - 6天
-            var lastFri = new Date(lastThu);
+            const lastFri = new Date(lastThu);
             lastFri.setDate(lastThu.getDate() - 6);
             
-            if (offset === 0) {
+            let startDate, endDate;
+            if (type === 'current') {
                 // 本周：上周五 到 本周四
-                document.getElementById('startDate').value = formatDate(lastFri);
-                document.getElementById('endDate').value = formatDate(thisThursday);
+                startDate = lastFri;
+                endDate = thisThu;
             } else {
                 // 上周：上上周五 到 上周四
-                var lastLastFri = new Date(lastFri);
-                lastLastFri.setDate(lastFri.getDate() - 7);
-                var lastLastThu = new Date(lastThu);
-                lastLastThu.setDate(lastThu.getDate() - 7);
-                
-                document.getElementById('startDate').value = formatDate(lastLastFri);
-                document.getElementById('endDate').value = formatDate(lastLastThu);
+                startDate = new Date(lastFri);
+                startDate.setDate(lastFri.getDate() - 7);
+                endDate = new Date(lastThu);
+                endDate.setDate(lastThu.getDate() - 7);
             }
+            
+            document.getElementById('startDate').value = formatDate(startDate);
+            document.getElementById('endDate').value = formatDate(endDate);
             updatePeriod();
         }
-
-        function updatePeriod() {
-            var start = document.getElementById('startDate').value;
-            var end = document.getElementById('endDate').value;
-            
-            if (start && end) {
-                var startParts = start.split('-');
-                var endParts = end.split('-');
-                var year = startParts[0].slice(-2);
-                var periodStr = year + '年(' + parseInt(startParts[1]) + '.' + parseInt(startParts[2]) + '-' + parseInt(endParts[1]) + '.' + parseInt(endParts[2]) + '日)';
-                document.getElementById('periodDisplay').textContent = periodStr;
-                
-                // 保存到 localStorage 供书签使用
-                localStorage.setItem('selectedPeriod', periodStr);
-            }
+        
+        function formatDate(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
         }
+        
+        function updatePeriod() {
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            
+            if (!start || !end) return;
+            
+            // 转换格式：2026-04-17 -> 4.17
+            const startMonth = parseInt(start.substring(5, 7));
+            const startDay = parseInt(start.substring(8, 10));
+            const endMonth = parseInt(end.substring(5, 7));
+            const endDay = parseInt(end.substring(8, 10));
+            
+            const year = parseInt(start.substring(0, 4));
+            const periodStr = `${year}年(${startMonth}.${startDay}-${endMonth}.${endDay}日)`;
+            
+            document.getElementById('periodStr').textContent = periodStr;
+            
+            // 更新结果框
+            updateResultBox();
+        }
+        
+        function updateResultBox() {
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            const callIn = document.getElementById('callIn').value || 'XXX';
+            const connectRate = document.getElementById('connectRate').value || 'XX%';
+            
+            if (!start || !end) return;
+            
+            const year = start.substring(0, 4);
+            const startMonth = parseInt(start.substring(5, 7));
+            const startDay = parseInt(start.substring(8, 10));
+            const endMonth = parseInt(end.substring(5, 7));
+            const endDay = parseInt(end.substring(8, 10));
+            
+            const periodStr = `${year}年(${startMonth}.${startDay}-${endMonth}.${endDay}日)`;
+            
+            document.getElementById('resultBox').textContent = `${periodStr}
+电话数据:
+呼入量: ${callIn}
+接通率: ${connectRate}
 
-        function copyPeriod() {
-            var text = document.getElementById('periodDisplay').textContent;
-            navigator.clipboard.writeText(text).then(function() {
-                alert('周期已复制: ' + text);
+📊 数据后台统计结果
+==================
+时间范围: ${start} / ${end}
+
+一线周提单量: XXX 个
+一线自行处理率: 0.XXXX
+
+==================
+请复制以上数据发送给AI助手`;
+        }
+        
+        // 监听输入变化
+        document.getElementById('callIn').addEventListener('input', updateResultBox);
+        document.getElementById('connectRate').addEventListener('input', updateResultBox);
+        
+        function copyToAI() {
+            const text = document.getElementById('resultBox').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('已复制到剪贴板！请粘贴发送给AI。');
+            }).catch(err => {
+                alert('复制失败，请手动复制。');
             });
         }
-
-        document.getElementById('startDate').addEventListener('change', updatePeriod);
-        document.getElementById('endDate').addEventListener('change', updatePeriod);
     </script>
 </body>
 </html>

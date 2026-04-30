@@ -105,20 +105,82 @@
             font-weight: bold;
             color: #1890ff;
         }
-        .copy-btn {
-            width: 100%;
-            padding: 14px;
-            background: #1890ff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
+        .input-group {
+            display: flex;
+            gap: 8px;
             margin-top: 12px;
         }
-        .copy-btn:hover {
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .input-group button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #1890ff;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .input-group button:hover {
             background: #40a9ff;
         }
+        .result-box {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        
+        /* 书签样式 */
+        .bookmarklets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .bookmarklet {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .bookmarklet:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .bookmarklet.purple {
+            background: #722ed1;
+        }
+        .bookmarklet.green {
+            background: #52c41a;
+        }
+        .bookmarklet.orange {
+            background: #fa8c16;
+        }
+        .bookmarklet .icon {
+            font-size: 16px;
+        }
+        .bookmarklet-desc {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+        
         .section-title {
             font-size: 14px;
             color: #333;
@@ -160,49 +222,6 @@
             color: #52c41a;
             font-size: 20px;
         }
-        .input-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        .input-group input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-        .input-group button {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 6px;
-            background: #1890ff;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .input-group button:hover {
-            background: #40a9ff;
-        }
-        .result-box {
-            background: #f9f9f9;
-            border-radius: 8px;
-            padding: 16px;
-            margin-top: 12px;
-            font-family: monospace;
-            font-size: 14px;
-            white-space: pre-wrap;
-            line-height: 1.6;
-        }
-        .alert {
-            background: #fff1f0;
-            border: 1px solid #ffccc7;
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 12px;
-            color: #f5222d;
-            font-size: 13px;
-        }
     </style>
 </head>
 <body>
@@ -229,6 +248,20 @@
                 <div class="label">当前周期</div>
                 <div class="value" id="periodStr">请选择日期</div>
             </div>
+            
+            <!-- 书签区域 -->
+            <div class="section-title">书签（拖到书签栏使用）</div>
+            <div class="bookmarklets">
+                <a class="bookmarklet purple" href="javascript:(function(){var d=new Date();var day=d.getDay();var offset=day<=4?4-day:11-day;var thu=new Date(d);thu.setDate(d.getDate()+offset);var fri=new Date(thu);fri.setDate(thu.getDate()-6);var start=fri.toISOString().substring(0,10);var end=thu.toISOString().substring(0,10);var inputs=document.querySelectorAll('input');for(var i=0;i<inputs.length;i++){if(inputs[i].type==='date'||inputs[i].className.indexOf('date')>=0){inputs[i].value=start;inputs[i].dispatchEvent(new Event('change'));if(inputs[i].value!==start){inputs[i].value=start;}}}var pageInputs=document.querySelectorAll('.ivu-input,input[type=text]');for(var i=0;i<pageInputs.length;i++){var p=pageInputs[i].parentElement;if(p&&p.className.indexOf('date-picker')>=0||p&&p.parentElement&&p.parentElement.className.indexOf('date')>=0){pageInputs[i].value=start;pageInputs[i].dispatchEvent(new Event('change'));}}alert('已设置日期范围: '+start+' 至 '+end);})();">
+                    <span class="icon">🟣</span>
+                    设置日期
+                </a>
+                <a class="bookmarklet green" href="javascript:(function(){var s=document.getElementById('startDate')?document.getElementById('startDate').value:null;var e=document.getElementById('endDate')?document.getElementById('endDate').value:null;if(!s||!e){s=prompt('开始日期:');e=prompt('结束日期:');}var dateRange=s+' 至 '+e;var callIn=0,connectRate='0%';var pageText=document.body.innerText;var lines=pageText.split('\n');for(var i=0;i<lines.length;i++){var line=lines[i].trim();if(line==='呼入量'){var nextLine=lines[i+1]?lines[i+1].trim():'';var m=nextLine.match(/^(\d+)/);if(m)callIn=parseInt(m[1]);}if(line==='接通率'||line==='队列接通率'){var nextLine=lines[i+1]?lines[i+1].trim():'';var m=nextLine.match(/([\d.]+%)/);if(m)connectRate=m[1];}}var result='呼入量:'+callIn+' 接通率:'+connectRate+'\n周期:'+dateRange;alert(result);navigator.clipboard.writeText(result);})();">
+                    <span class="icon">🟢</span>
+                    抓取电话数据
+                </a>
+            </div>
+            <div class="bookmarklet-desc">拖动上方书签到浏览器书签栏，在七鱼后台页面点击书签即可</div>
         </div>
         
         <div class="card">
@@ -260,11 +293,11 @@
             <div class="guide-box">
                 <h3>操作流程</h3>
                 <ol>
-                    <li>选择日期周期（上周/本周按钮会自动设置）</li>
-                    <li>在七鱼后台「团队报表」页面筛选相同日期+售后服务组</li>
+                    <li>在工具页面选择日期（上周/本周自动设置）</li>
+                    <li>拖动「设置日期」书签到浏览器书签栏</li>
+                    <li>在七鱼后台「团队报表」页面点击「设置日期」书签</li>
                     <li>查看呼入量和接通率，填入上方输入框</li>
                     <li>点击「复制给AI」按钮</li>
-                    <li>粘贴发送给AI</li>
                 </ol>
             </div>
             <div class="guide-box">
@@ -290,7 +323,7 @@
         
         function setPeriod(type) {
             const today = new Date();
-            const dayOfWeek = today.getDay(); // 0=周日, 1=周一, ..., 6=周六
+            const dayOfWeek = today.getDay();
             
             // 计算本周四
             let thisThu = new Date(today);
@@ -312,11 +345,9 @@
             
             let startDate, endDate;
             if (type === 'current') {
-                // 本周：上周五 到 本周四
                 startDate = lastFri;
                 endDate = thisThu;
             } else {
-                // 上周：上上周五 到 上周四
                 startDate = new Date(lastFri);
                 startDate.setDate(lastFri.getDate() - 7);
                 endDate = new Date(lastThu);
@@ -341,7 +372,6 @@
             
             if (!start || !end) return;
             
-            // 转换格式：2026-04-17 -> 4.17
             const startMonth = parseInt(start.substring(5, 7));
             const startDay = parseInt(start.substring(8, 10));
             const endMonth = parseInt(end.substring(5, 7));
@@ -351,8 +381,6 @@
             const periodStr = `${year}年(${startMonth}.${startDay}-${endMonth}.${endDay}日)`;
             
             document.getElementById('periodStr').textContent = periodStr;
-            
-            // 更新结果框
             updateResultBox();
         }
         
@@ -388,7 +416,6 @@
 请复制以上数据发送给AI助手`;
         }
         
-        // 监听输入变化
         document.getElementById('callIn').addEventListener('input', updateResultBox);
         document.getElementById('connectRate').addEventListener('input', updateResultBox);
         

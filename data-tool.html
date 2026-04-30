@@ -97,36 +97,40 @@
             const today = new Date();
             const dayOfWeek = today.getDay(); // 0=周日, 1=周一, ..., 6=周六
             
-            // 计算本周四的日期（周五开始）
-            let thursday = new Date(today);
+            // 计算本周四的日期
+            let thisThursday = new Date(today);
             if (dayOfWeek === 0) {
                 // 周日：本周四 = 今天 - 3天
-                thursday.setDate(today.getDate() - 3);
+                thisThursday.setDate(today.getDate() - 3);
             } else if (dayOfWeek <= 4) {
-                // 周一到周四：本周四 = 今天 + (4 - dayOfWeek)天
-                thursday.setDate(today.getDate() + (4 - dayOfWeek));
+                // 周一到周四：本周四 = 今天
+                // 不变
             } else {
-                // 周五到周六：本周四已过，取本周四
-                thursday.setDate(today.getDate() - (dayOfWeek - 4));
+                // 周五到周六：本周四已过，取今天所在的这一周的周四
+                thisThursday.setDate(today.getDate() - (dayOfWeek - 4));
             }
             
-            // 上周五 = 本周四 - 7天
-            const lastFriday = new Date(thursday);
-            lastFriday.setDate(thursday.getDate() - 7);
+            // 上周四 = 本周四 - 7天
+            const lastThu = new Date(thisThursday);
+            lastThu.setDate(thisThursday.getDate() - 7);
             
-            // 上周四 = 本周四 - 1天
-            const lastThursday = new Date(thursday);
-            lastThursday.setDate(thursday.getDate() - 1);
+            // 上周五 = 上周四 - 6天
+            const lastFri = new Date(lastThu);
+            lastFri.setDate(lastThu.getDate() - 6);
             
             if (offset === 0) {
-                // 本周：上周五到本周四
-                document.getElementById('startDate').value = formatDate(lastFriday);
-                document.getElementById('endDate').value = formatDate(thursday);
+                // 本周：上周五 到 本周四
+                document.getElementById('startDate').value = formatDate(lastFri);
+                document.getElementById('endDate').value = formatDate(thisThursday);
             } else {
-                // 上周：上上周五到上周四
-                document.getElementById('startDate').value = formatDate(lastFriday);
-                document.getElementById('startDate').value = formatDate(new Date(lastFriday.getTime() - 7 * 24 * 60 * 60 * 1000));
-                document.getElementById('endDate').value = formatDate(lastThursday);
+                // 上周：上上周五 到 上周四
+                const lastLastFri = new Date(lastFri);
+                lastLastFri.setDate(lastFri.getDate() - 7);
+                const lastLastThu = new Date(lastThu);
+                lastLastThu.setDate(lastThu.getDate() - 7);
+                
+                document.getElementById('startDate').value = formatDate(lastLastFri);
+                document.getElementById('endDate').value = formatDate(lastLastThu);
             }
             updatePeriod();
         }

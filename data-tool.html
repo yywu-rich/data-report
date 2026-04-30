@@ -42,7 +42,7 @@
         
         /* 重要提示 */
         .important-notice { 
-            background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%); 
+            background: linear-gradient(135deg, #1890ff 0%, #69c0ff 100%); 
             color: white; 
             padding: 20px; 
             border-radius: 8px; 
@@ -71,20 +71,61 @@
             border-radius: 4px; 
             font-size: 12px;
         }
+        
+        /* 流程图样式 */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .flow-item {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-width: 150px;
+        }
+        .flow-item.green { border: 2px solid #07c160; }
+        .flow-item.orange { border: 2px solid #ff6a00; }
+        .flow-item.blue { border: 2px solid #1890ff; }
+        .flow-arrow { color: #999; font-size: 20px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📊 售后数据抓取工具</h1>
-        <p class="subtitle">用于从企业微信和网易七鱼后台抓取周期数据</p>
+        <p class="subtitle">用于从网易七鱼后台抓取周期数据</p>
 
-        <!-- 重要提示 -->
-        <div class="important-notice">
-            <h3>⚠️ 重要提示 - 两个书签在不同页面使用！</h3>
-            <ul>
-                <li><span class="wechat-label">绿色书签</span> <strong>企微会话数据</strong> → 在 <strong>企业微信后台</strong> 使用</li>
-                <li><span class="phone-label">橙色书签</span> <strong>电话数据</strong> → 在 <strong>网易七鱼后台</strong> 使用</li>
-            </ul>
+        <!-- 操作流程 -->
+        <h2>📋 操作流程</h2>
+        <div class="flow-container">
+            <div class="flow-item blue">
+                <div style="font-size: 24px;">1️⃣</div>
+                <div>选择日期周期</div>
+                <div style="font-size: 12px; color: #666;">生成周期字符串</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-item green">
+                <div style="font-size: 24px;">2️⃣</div>
+                <div><span class="wechat-label">企微数据</span></div>
+                <div style="font-size: 12px; color: #666;">七鱼总览页面</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-item orange">
+                <div style="font-size: 24px;">3️⃣</div>
+                <div><span class="phone-label">电话数据</span></div>
+                <div style="font-size: 12px; color: #666;">七鱼呼叫统计</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-item blue">
+                <div style="font-size: 24px;">4️⃣</div>
+                <div>发给我</div>
+                <div style="font-size: 12px; color: #666;">更新报表</div>
+            </div>
         </div>
 
         <!-- 第一步：选择周期 -->
@@ -106,12 +147,12 @@
         </div>
 
         <!-- 第二步：企微数据抓取 -->
-        <h2>2️⃣ <span class="wechat-label">企业微信</span> 会话数据</h2>
+        <h2>2️⃣ <span class="wechat-label">企微会话数据</span></h2>
         <div class="section">
             <div class="info-box">
                 <div class="info-title">📍 适用页面</div>
-                <p><strong>企业微信APP电脑版</strong> → 工作台 → <strong>客户联系</strong> → 数据统计 → 会话统计</p>
-                <p style="color: #ff4d4f; margin-top: 5px;">⚠️ 不是七鱼后台！是企业微信！</p>
+                <p><strong>网易七鱼后台</strong> → <strong>总览</strong> → 查看"客户来源"中的企业微信数据</p>
+                <p style="margin-top: 8px;">需要抓取：<strong>企业微信-客户服务-广东盈世计算机科技有限公司</strong> 的会话量</p>
             </div>
             
             <h3 style="margin: 15px 0 10px 0;">📖 使用步骤：</h3>
@@ -121,21 +162,26 @@
             </div>
             <div class="step">
                 <span class="step-number">2</span>
-                <strong>打开企业微信APP</strong>，进入"客户联系 → 数据统计 → 会话统计"页面
+                <strong>打开网易七鱼后台</strong> → 进入"总览"页面
             </div>
             <div class="step">
                 <span class="step-number">3</span>
+                在"客户来源"饼图中找到 <span class="wechat-label">企业微信 客户服务/广东盈世计算机科技有限公司</span> 的会话量
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
                 <strong style="color: #07c160;">点击下方绿色书签按钮"企微数据"</strong>
             </div>
             
-            <h3 style="margin: 15px 0 10px 0;">🟢 书签脚本（企微用）：</h3>
-            <a class="bookmarklet wechat-bookmark" id="wechatBookmark" href="javascript:(function(){const period=document.getElementById('periodOutput')?document.getElementById('periodOutput').textContent.trim():'';const tables=document.querySelectorAll('table');let result='企微数据：\n';let weekData={sessions:0,orders:0,p4Orders:0};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('会话量'))weekData.sessions=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('派单'))weekData.orders=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('P4'))weekData.p4Orders=parseInt(value.replace(/[^0-9]/g,''))||0;}});});result+=`周期: ${period}\n会话量: ${weekData.sessions}\n派单工: ${weekData.orders}\nP4工: ${weekData.p4Orders}`;navigator.clipboard.writeText(result).then(()=>{alert('企微数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">🟢 企微数据</a>
+            <h3 style="margin: 15px 0 10px 0;">🟢 书签脚本（企微数据）：</h3>
+            <a class="bookmarklet wechat-bookmark" id="wechatBookmark" href="javascript:(function(){const period=document.getElementById('periodOutput')?document.getElementById('periodOutput').textContent.trim():'';let wechatSession=0,wechatOrders=0,wechatP4=0;document.querySelectorAll('*').forEach(el=>{const text=el.innerText||'';if(text.includes('企业微信')&&text.includes('广东盈世')){const parent=el.closest('div')||el.parentElement;if(parent){const allText=parent.innerText||'';const match=allText.match(/(\d+)个/);if(match)wechatSession=parseInt(match[1]);}}});const result=`企微数据：\n周期: ${period}\n企业微信-客户服务-广东盈世计算机科技有限公司: ${wechatSession}个`;navigator.clipboard.writeText(result).then(()=>{alert('企微数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">🟢 企微数据</a>
             
             <div class="tips">
-                <strong>💡 企微后台抓取要点：</strong>
+                <strong>💡 抓取要点：</strong>
                 <ul>
-                    <li>在企业微信的"会话统计"页面抓取</li>
-                    <li>选择日期范围后，等待数据加载完成</li>
+                    <li>在七鱼后台的"总览"页面查看</li>
+                    <li>找到"客户来源"饼图中的企业微信数据</li>
+                    <li>显示格式：企业微信 客户服务/广东盈世计算机科技有限公司 xxx个</li>
                     <li>点击绿色书签即可复制数据</li>
                 </ul>
             </div>
@@ -168,11 +214,11 @@
                 <strong style="color: #ff6a00;">点击下方橙色书签按钮"电话数据"</strong>
             </div>
             
-            <h3 style="margin: 15px 0 10px 0;">🟠 书签脚本（七鱼用）：</h3>
-            <a class="bookmarklet phone-bookmark" id="phoneBookmark" href="javascript:(function(){const period=document.getElementById('periodOutput')?document.getElementById('periodOutput').textContent.trim():'';const tables=document.querySelectorAll('table');let result='电话数据：\n';let phoneData={calls:0,connectRate:'0%'};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('接入量')||label.includes('呼入量'))phoneData.calls=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('接通率')||label.includes('接通'))phoneData.connectRate=value;}});});result+=`周期: ${period}\n呼入量: ${phoneData.calls}\n接通率: ${phoneData.connectRate}`;navigator.clipboard.writeText(result).then(()=>{alert('电话数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">🟠 电话数据</a>
+            <h3 style="margin: 15px 0 10px 0;">🟠 书签脚本（电话数据）：</h3>
+            <a class="bookmarklet phone-bookmark" id="phoneBookmark" href="javascript:(function(){const period=document.getElementById('periodOutput')?document.getElementById('periodOutput').textContent.trim():'';let callIn=0,connectRate='0%';document.querySelectorAll('table').forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');cells.forEach((cell,idx)=>{const text=cell.innerText.trim();if(text.includes('呼入')||text.includes('接入')){const nextCell=cells[idx+1];if(nextCell){const val=nextCell.innerText.trim();callIn=parseInt(val.replace(/[^0-9]/g,''))||0;}}if(text.includes('接通率')){const nextCell=cells[idx+1];if(nextCell){connectRate=nextCell.innerText.trim();}}});});});const result=`电话数据：\n周期: ${period}\n呼入量: ${callIn}\n接通率: ${connectRate}`;navigator.clipboard.writeText(result).then(()=>{alert('电话数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">🟠 电话数据</a>
             
             <div class="tips">
-                <strong>💡 七鱼后台抓取要点：</strong>
+                <strong>💡 抓取要点：</strong>
                 <ul>
                     <li>进入"数据中心 → 呼叫中心 → 通话统计"</li>
                     <li>筛选条件选择"售后服务组"</li>
@@ -190,7 +236,7 @@
             </div>
             
             <h3 style="margin: 15px 0 10px 0;">🔗 书签脚本：</h3>
-            <a class="bookmarklet" href="javascript:(function(){const tables=document.querySelectorAll('table');let result='二线解决率数据：\n';let dataList=[];tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach((row,idx)=>{if(idx===0)return;const cells=row.querySelectorAll('td');if(cells.length>=5){const period=cells[0].innerText.trim();const orderCount=cells[1].innerText.trim();const dailyRate=cells[2].innerText.trim();const weeklyRate=cells[3].innerText.trim();if(period){dataList.push(`${period} | 工单:${orderCount} | 日解决率:${dailyRate} | 周解决率:${weeklyRate}`);}}});});result+=dataList.join('\n');navigator.clipboard.writeText(result).then(()=>{alert('二线解决率数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">📊 二线解决率</a>
+            <a class="bookmarklet" href="javascript:(function(){const tables=document.querySelectorAll('table');let result='二线解决率数据：\n';let dataList=[];tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach((row,idx)=>{if(idx===0)return;const cells=row.querySelectorAll('td');if(cells.length>=5){const period=cells[0].innerText.trim();const orderCount=cells[1].innerText.trim();const dailyRate=cells[2].innerText.trim();const weeklyRate=cells[3].innerText.trim();if(period&&!period.includes('时间')&&!period.includes('对比')){dataList.push(`${period} | 工单:${orderCount} | 周解决率:${weeklyRate}`);}}});});result+=dataList.slice(0,3).join('\n');navigator.clipboard.writeText(result).then(()=>{alert('二线解决率数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">📊 二线解决率</a>
         </div>
 
         <!-- 发送数据格式 -->
@@ -199,8 +245,8 @@
             <div class="success">
                 <strong>✅ 正确操作流程</strong>
                 <div style="margin-top: 10px;">
-                    <p><strong>第一步：</strong>在企业微信后台抓取企微数据（绿色书签）</p>
-                    <p><strong>第二步：</strong>在七鱼后台抓取电话数据（橙色书签）</p>
+                    <p><strong>第一步：</strong>在七鱼后台"总览"页面抓取企微数据（绿色书签）</p>
+                    <p><strong>第二步：</strong>在七鱼后台"呼叫统计"页面抓取电话数据（橙色书签）</p>
                     <p><strong>第三步：</strong>将两次抓取的数据文本发给我</p>
                 </div>
             </div>
@@ -208,9 +254,7 @@
             <h3 style="margin: 15px 0 10px 0;">📝 数据格式示例：</h3>
             <div class="code-block">企微数据：
 周期: 26年(04.24-04.30日)
-会话量: 1525
-派单工: 391
-P4工: 216
+企业微信-客户服务-广东盈世计算机科技有限公司: 1525个
 
 电话数据：
 周期: 26年(04.24-04.30日)

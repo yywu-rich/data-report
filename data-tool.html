@@ -69,7 +69,38 @@
             <a class="bookmarklet" href="javascript:(function(){var s=document.getElementById('startDate')?document.getElementById('startDate').value:null;var e=document.getElementById('endDate')?document.getElementById('endDate').value:null;if(!s||!e){s=prompt('开始日期:');e=prompt('结束日期:');}var dateRange=s+' - '+e;var wechatSession=0;document.querySelectorAll('*').forEach(function(el){var text=el.innerText||'';if(text.includes('企业微信')&&text.includes('广东盈世')){var match=text.match(/企业微信[^0-9]*([0-9]+)个/);if(match)wechatSession=parseInt(match[1]);}});var result='企业微信-客户服务-广东盈世计算机科技有限公司\n'+wechatSession+'个\n\n周期: '+dateRange;alert('企微数据已复制！\n\n'+result);navigator.clipboard.writeText(result);})();">🟢 企微数据</a>
             
             <p style="margin: 15px 0 10px 0; font-weight: bold;">🟠 电话数据（团队报表 → 呼入数据）：</p>
-            <a class="bookmarklet phone" href="javascript:(function(){var s=document.getElementById('startDate')?document.getElementById('startDate').value:null;var e=document.getElementById('endDate')?document.getElementById('endDate').value:null;if(!s||!e){s=prompt('开始日期:');e=prompt('结束日期:');}var dateRange=s+' - '+e;var callIn=0,connectRate='0%';var tables=document.querySelectorAll('table');tables.forEach(function(tbl){var rows=tbl.querySelectorAll('tr');rows.forEach(function(row){var cells=row.querySelectorAll('td,th');cells.forEach(function(cell,i){var txt=cell.innerText.trim();if(txt==='呼入量'){var nc=cells[i+1];if(nc){var v=nc.innerText.replace(/[^0-9]/g,'');if(v)callIn=parseInt(v);}}if(txt==='接通率'){var nc=cells[i+1];if(nc){connectRate=nc.innerText.trim();}}if(txt==='总量'){var nc=cells[i+1];if(nc){var v=nc.innerText.replace(/[^0-9]/g,'');if(v&&callIn===0)callIn=parseInt(v);}}});});});var result='呼入量 '+callIn+' 接通率 '+connectRate+'\n\n周期: '+dateRange;alert('电话数据已复制！\n\n'+result);navigator.clipboard.writeText(result);})();">🟠 电话数据</a>
+            <a class="bookmarklet phone" href="javascript:javascript:(function(){
+    var s=document.getElementById('startDate')?document.getElementById('startDate').value:null;
+    var e=document.getElementById('endDate')?document.getElementById('endDate').value:null;
+    if(!s||!e){s=prompt('开始日期:');e=prompt('结束日期:');}
+    var dateRange=s+' - '+e;
+    var callIn=0,connectRate='0%';
+    
+    // 从页面文本直接搜索
+    var pageText=document.body.innerText;
+    var match=pageText.match(/呼入量[\s\S]{0,30}?(\d+)/);
+    if(match)callIn=parseInt(match[1]);
+    
+    // 搜索接通率
+    match=pageText.match(/接通率[^\d]*?([\d.]+%)/);
+    if(match)connectRate=match[1];
+    
+    // 搜索服务时间接通率
+    if(connectRate==='0%'){
+        match=pageText.match(/服务时间[^\d]*?([\d.]+%)/);
+        if(match)connectRate=match[1];
+    }
+    
+    // 搜索呼入接通率
+    if(connectRate==='0%'){
+        match=pageText.match(/呼入接通率[^\d]*?([\d.]+%)/);
+        if(match)connectRate=match[1];
+    }
+    
+    var result='呼入量 '+callIn+' 接通率 '+connectRate+'\n\n周期: '+dateRange;
+    alert('电话数据已复制！\n\n'+result);
+    navigator.clipboard.writeText(result);
+})();">🟠 电话数据</a>
             
             <div class="tips">
                 <strong>💡 提示：</strong><br>

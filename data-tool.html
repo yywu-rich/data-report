@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>售后数据抓取工具</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft YaHei", Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 10px; padding-bottom: 15px; border-bottom: 2px solid #1890ff; }
+        .subtitle { color: #666; font-size: 14px; margin-bottom: 30px; }
+        h2 { color: #1890ff; margin: 25px 0 15px 0; font-size: 18px; }
+        .section { background: #fafafa; padding: 20px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #1890ff; }
+        .form-group { margin: 15px 0; }
+        .form-group label { display: inline-block; width: 120px; font-weight: bold; color: #333; }
+        .form-group input { padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 14px; }
+        .form-group input:focus { border-color: #1890ff; outline: none; }
+        .btn { display: inline-block; padding: 10px 20px; background: #1890ff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin: 5px; }
+        .btn:hover { background: #40a9ff; }
+        .btn-success { background: #52c41a; }
+        .btn-success:hover { background: #73d13d; }
+        .btn-secondary { background: #666; }
+        .btn-secondary:hover { background: #888; }
+        .bookmarklet { display: inline-block; background: #1890ff; color: white; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; margin: 10px 5px 10px 0; cursor: move; }
+        .bookmarklet:hover { background: #40a9ff; }
+        .code-block { background: #282c34; color: #abb2bf; padding: 15px; border-radius: 4px; font-family: Consolas, Monaco, monospace; font-size: 12px; overflow-x: auto; margin: 10px 0; max-height: 200px; overflow-y: auto; }
+        .step { margin: 10px 0; padding: 10px; background: white; border-radius: 4px; }
+        .step-number { display: inline-block; width: 24px; height: 24px; background: #1890ff; color: white; border-radius: 50%; text-align: center; line-height: 24px; margin-right: 10px; font-size: 12px; }
+        .warning { background: #fff7e6; border: 1px solid #ffd591; padding: 15px; border-radius: 4px; margin: 15px 0; }
+        .warning-title { color: #fa8c16; font-weight: bold; margin-bottom: 5px; }
+        .success { background: #f6ffed; border: 1px solid #b7eb8f; padding: 15px; border-radius: 4px; margin: 15px 0; }
+        .output-area { background: #f6f6f6; border: 1px solid #d9d9d9; padding: 15px; border-radius: 4px; min-height: 60px; font-family: monospace; white-space: pre-wrap; margin-top: 10px; }
+        .info-box { background: #e6f7ff; border: 1px solid #91d5ff; padding: 15px; border-radius: 4px; margin: 15px 0; }
+        .info-title { color: #1890ff; font-weight: bold; margin-bottom: 5px; }
+        .tips { background: #f9f9f9; padding: 15px; border-radius: 4px; margin: 10px 0; font-size: 13px; color: #666; }
+        .tips li { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 售后数据抓取工具</h1>
+        <p class="subtitle">用于从网易七鱼后台和企微后台抓取周期数据</p>
+
+        <!-- 第一步：选择周期 -->
+        <h2>1️⃣ 选择统计周期</h2>
+        <div class="section">
+            <div class="form-group">
+                <label>开始日期：</label>
+                <input type="date" id="startDate" value="">
+            </div>
+            <div class="form-group">
+                <label>结束日期：</label>
+                <input type="date" id="endDate" value="">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success" onclick="generatePeriod()">📅 生成周期字符串</button>
+                <button class="btn btn-secondary" onclick="copyPeriod()">📋 复制周期</button>
+            </div>
+            <div class="output-area" id="periodOutput">周期格式示例：04.24-04.30</div>
+        </div>
+
+        <!-- 第二步：企微数据抓取 -->
+        <h2>2️⃣ 企业微信会话数据</h2>
+        <div class="section">
+            <div class="info-box">
+                <div class="info-title">适用页面</div>
+                <p>企业微信后台 → 客户联系 → 数据统计 → 会话统计</p>
+            </div>
+            
+            <h3 style="margin: 15px 0 10px 0;">📖 使用步骤：</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                在上方选择好日期周期
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                登录企微后台，进入会话统计页面，选择对应日期范围
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                点击下方书签按钮抓取数据
+            </div>
+            
+            <h3 style="margin: 15px 0 10px 0;">🔗 书签脚本（带周期）：</h3>
+            <a class="bookmarklet" id="wechatBookmark" href="javascript:(function(){const period=document.getElementById('periodOutput')?document.getElementById('periodOutput').textContent.trim():'';const tables=document.querySelectorAll('table');let result='企微数据：\n';let weekData={sessions:0,orders:0,p4Orders:0};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('会话量'))weekData.sessions=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('派单'))weekData.orders=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('P4'))weekData.p4Orders=parseInt(value.replace(/[^0-9]/g,''))||0;}});});result+=`周期: ${period}\n`;result+=`会话量: ${weekData.sessions}\n派单工: ${weekData.orders}\nP4工: ${weekData.p4Orders}`;navigator.clipboard.writeText(result).then(()=>{alert('企微数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">📥 抓取企微数据</a>
+            
+            <div class="tips">
+                <strong>💡 抓取前请确保：</strong>
+                <ul>
+                    <li>已在上方选择并生成了周期日期</li>
+                    <li>企微后台已选择相同的日期范围</li>
+                    <li>页面已加载完成，显示统计数据</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 第三步：电话数据抓取 -->
+        <h2>3️⃣ 网易七鱼电话数据</h2>
+        <div class="section">
+            <div class="info-box">
+                <div class="info-title">适用页面</div>
+                <p>网易七鱼 → 数据中心 → 呼叫中心 → 通话统计（筛选售后服务组）</p>
+            </div>
+            
+            <h3 style="margin: 15px 0 10px 0;">📖 使用步骤：</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                在上方选择好日期周期
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                登录七鱼后台，筛选"售后服务组"，选择对应日期范围
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                点击下方书签按钮抓取数据
+            </div>
+            
+            <h3 style="margin: 15px 0 10px 0;">🔗 书签脚本（带周期）：</h3>
+            <a class="bookmarklet" id="phoneBookmark" href="javascript:(function(){const period=document.getElementById('periodOutput')?document.getElementById('periodOutput').textContent.trim():'';const tables=document.querySelectorAll('table');let result='电话数据：\n';let phoneData={calls:0,connectRate:'0%'};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('接入量')||label.includes('呼入量'))phoneData.calls=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('接通率')||label.includes('接通'))phoneData.connectRate=value;}});});result+=`周期: ${period}\n`;result+=`呼入量: ${phoneData.calls}\n接通率: ${phoneData.connectRate}`;navigator.clipboard.writeText(result).then(()=>{alert('电话数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">📞 抓取电话数据</a>
+            
+            <div class="tips">
+                <strong>💡 抓取前请确保：</strong>
+                <ul>
+                    <li>已在上方选择并生成了周期日期</li>
+                    <li>已筛选"售后服务组"</li>
+                    <li>页面已加载完成，显示统计数据</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 第四步：二线解决率 -->
+        <h2>4️⃣ 二线解决率数据</h2>
+        <div class="section">
+            <div class="info-box">
+                <div class="info-title">适用页面</div>
+                <p>二线解决率统计页面（Jira或内部系统）</p>
+            </div>
+            
+            <h3 style="margin: 15px 0 10px 0;">🔗 书签脚本：</h3>
+            <a class="bookmarklet" href="javascript:(function(){const tables=document.querySelectorAll('table');let result='二线解决率数据：\n';let dataList=[];tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach((row,idx)=>{if(idx===0)return;const cells=row.querySelectorAll('td');if(cells.length>=5){const period=cells[0].innerText.trim();const orderCount=cells[1].innerText.trim();const dailyRate=cells[2].innerText.trim();const weeklyRate=cells[3].innerText.trim();if(period){dataList.push(`${period} | 工单:${orderCount} | 日解决率:${dailyRate} | 周解决率:${weeklyRate}`);}}});});result+=dataList.join('\n');navigator.clipboard.writeText(result).then(()=>{alert('二线解决率数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">📊 抓取二线解决率</a>
+        </div>
+
+        <!-- 一键复制所有数据 -->
+        <h2>5️⃣ 一键抓取所有数据</h2>
+        <div class="section">
+            <div class="warning">
+                <div class="warning-title">⚠️ 重要提示</div>
+                <p>请确保已分别打开企微后台和七鱼后台页面，并且都选择了相同的日期范围。</p>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                先点击上方"企微数据"书签 → 企微后台页面
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                再点击上方"电话数据"书签 → 七鱼后台页面
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                最后将两次弹出的数据发给我
+            </div>
+            
+            <div class="success">
+                <strong>✅ 发送格式</strong>
+                <p>直接发送抓取到的数据文本即可，我会自动识别并更新报表。</p>
+                <p>格式示例：</p>
+                <div class="code-block">企微数据：
+周期: 04.24-04.30
+会话量: 1525
+派单工: 391
+P4工: 216
+
+电话数据：
+周期: 04.24-04.30
+呼入量: 327
+接通率: 94%</div>
+            </div>
+        </div>
+
+        <!-- 备用手动脚本 -->
+        <h2>📋 备用手动脚本</h2>
+        <div class="section">
+            <p>如果书签无法正常工作，可以在浏览器控制台（F12 → Console）中粘贴以下代码执行：</p>
+            
+            <h3 style="margin: 15px 0 10px 0;">企微数据脚本：</h3>
+            <div class="code-block">javascript:(function(){const tables=document.querySelectorAll('table');let result='企微数据：\n';let weekData={sessions:0,orders:0,p4Orders:0};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('会话量'))weekData.sessions=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('派单'))weekData.orders=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('P4'))weekData.p4Orders=parseInt(value.replace(/[^0-9]/g,''))||0;}});});result+=`会话量: ${weekData.sessions}\n派单工: ${weekData.orders}\nP4工: ${weekData.p4Orders}`;navigator.clipboard.writeText(result).then(()=>{alert('数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();</div>
+            
+            <h3 style="margin: 15px 0 10px 0;">电话数据脚本：</h3>
+            <div class="code-block">javascript:(function(){const tables=document.querySelectorAll('table');let result='电话数据：\n';let phoneData={calls:0,connectRate:'0%'};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('接入量')||label.includes('呼入量'))phoneData.calls=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('接通率')||label.includes('接通'))phoneData.connectRate=value;}});});result+=`呼入量: ${phoneData.calls}\n接通率: ${phoneData.connectRate}`;navigator.clipboard.writeText(result).then(()=>{alert('数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();</div>
+        </div>
+    </div>
+
+    <script>
+        // 设置默认日期为上周
+        function setDefaultDates() {
+            const today = new Date();
+            const endDate = new Date(today);
+            endDate.setDate(today.getDate() - today.getDay() - 1); // 上周六
+            const startDate = new Date(endDate);
+            startDate.setDate(endDate.getDate() - 6); // 上周日
+            
+            document.getElementById('startDate').value = formatDate(startDate);
+            document.getElementById('endDate').value = formatDate(endDate);
+            generatePeriod();
+        }
+        
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        function generatePeriod() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                document.getElementById('periodOutput').textContent = '请选择有效的日期';
+                return;
+            }
+            
+            const startMonth = startDate.getMonth() + 1;
+            const startDay = startDate.getDate();
+            const endMonth = endDate.getMonth() + 1;
+            const endDay = endDate.getDate();
+            
+            let year = startDate.getFullYear();
+            let yearStr = year.toString().slice(-2); // 取后两位
+            
+            let period;
+            if (startMonth === endMonth) {
+                period = `${yearStr}年(${startMonth}.${startDay}-${endMonth}.${endDay}日)`;
+            } else {
+                period = `${yearStr}年(${startMonth}.${startDay}-${endMonth}.${endDay}日)`;
+            }
+            
+            document.getElementById('periodOutput').textContent = period;
+        }
+        
+        function copyPeriod() {
+            const period = document.getElementById('periodOutput').textContent;
+            navigator.clipboard.writeText(period).then(() => {
+                alert('周期已复制：' + period);
+            }).catch(() => {
+                prompt('请手动复制周期：', period);
+            });
+        }
+        
+        // 页面加载时设置默认日期
+        window.onload = setDefaultDates;
+    </script>
+</body>
+</html>

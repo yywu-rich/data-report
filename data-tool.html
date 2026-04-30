@@ -22,25 +22,70 @@
         .btn-success:hover { background: #73d13d; }
         .btn-secondary { background: #666; }
         .btn-secondary:hover { background: #888; }
-        .bookmarklet { display: inline-block; background: #1890ff; color: white; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; margin: 10px 5px 10px 0; cursor: move; }
+        .bookmarklet { display: inline-block; background: #1890ff; color: white; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; margin: 10px 5px 10px 0; cursor: move; font-size: 16px; }
         .bookmarklet:hover { background: #40a9ff; }
+        .wechat-bookmark { background: #07c160; } /* 绿色 - 企微 */
+        .wechat-bookmark:hover { background: #1aad19; }
+        .phone-bookmark { background: #ff6a00; } /* 橙色 - 电话 */
+        .phone-bookmark:hover { background: #ff8c00; }
         .code-block { background: #282c34; color: #abb2bf; padding: 15px; border-radius: 4px; font-family: Consolas, Monaco, monospace; font-size: 12px; overflow-x: auto; margin: 10px 0; max-height: 200px; overflow-y: auto; }
         .step { margin: 10px 0; padding: 10px; background: white; border-radius: 4px; }
         .step-number { display: inline-block; width: 24px; height: 24px; background: #1890ff; color: white; border-radius: 50%; text-align: center; line-height: 24px; margin-right: 10px; font-size: 12px; }
         .warning { background: #fff7e6; border: 1px solid #ffd591; padding: 15px; border-radius: 4px; margin: 15px 0; }
         .warning-title { color: #fa8c16; font-weight: bold; margin-bottom: 5px; }
         .success { background: #f6ffed; border: 1px solid #b7eb8f; padding: 15px; border-radius: 4px; margin: 15px 0; }
-        .output-area { background: #f6f6f6; border: 1px solid #d9d9d9; padding: 15px; border-radius: 4px; min-height: 60px; font-family: monospace; white-space: pre-wrap; margin-top: 10px; }
+        .output-area { background: #f6f6f6; border: 1px solid #d9d9d9; padding: 15px; border-radius: 4px; min-height: 60px; font-family: monospace; white-space: pre-wrap; margin-top: 10px; font-size: 16px; font-weight: bold; }
         .info-box { background: #e6f7ff; border: 1px solid #91d5ff; padding: 15px; border-radius: 4px; margin: 15px 0; }
         .info-title { color: #1890ff; font-weight: bold; margin-bottom: 5px; }
         .tips { background: #f9f9f9; padding: 15px; border-radius: 4px; margin: 10px 0; font-size: 13px; color: #666; }
         .tips li { margin: 5px 0; }
+        
+        /* 重要提示 */
+        .important-notice { 
+            background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%); 
+            color: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+        .important-notice h3 { 
+            margin-bottom: 10px; 
+            font-size: 18px;
+        }
+        .important-notice ul { 
+            margin-left: 20px; 
+        }
+        .important-notice li { 
+            margin: 8px 0; 
+        }
+        .wechat-label { 
+            background: #07c160; 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            font-size: 12px;
+        }
+        .phone-label { 
+            background: #ff6a00; 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📊 售后数据抓取工具</h1>
-        <p class="subtitle">用于从网易七鱼后台和企微后台抓取周期数据</p>
+        <p class="subtitle">用于从企业微信和网易七鱼后台抓取周期数据</p>
+
+        <!-- 重要提示 -->
+        <div class="important-notice">
+            <h3>⚠️ 重要提示 - 两个书签在不同页面使用！</h3>
+            <ul>
+                <li><span class="wechat-label">绿色书签</span> <strong>企微会话数据</strong> → 在 <strong>企业微信后台</strong> 使用</li>
+                <li><span class="phone-label">橙色书签</span> <strong>电话数据</strong> → 在 <strong>网易七鱼后台</strong> 使用</li>
+            </ul>
+        </div>
 
         <!-- 第一步：选择周期 -->
         <h2>1️⃣ 选择统计周期</h2>
@@ -57,75 +102,81 @@
                 <button class="btn btn-success" onclick="generatePeriod()">📅 生成周期字符串</button>
                 <button class="btn btn-secondary" onclick="copyPeriod()">📋 复制周期</button>
             </div>
-            <div class="output-area" id="periodOutput">周期格式示例：04.24-04.30</div>
+            <div class="output-area" id="periodOutput">周期格式示例：26年(04.24-04.30日)</div>
         </div>
 
         <!-- 第二步：企微数据抓取 -->
-        <h2>2️⃣ 企业微信会话数据</h2>
+        <h2>2️⃣ <span class="wechat-label">企业微信</span> 会话数据</h2>
         <div class="section">
             <div class="info-box">
-                <div class="info-title">适用页面</div>
-                <p>企业微信后台 → 客户联系 → 数据统计 → 会话统计</p>
+                <div class="info-title">📍 适用页面</div>
+                <p><strong>企业微信APP电脑版</strong> → 工作台 → <strong>客户联系</strong> → 数据统计 → 会话统计</p>
+                <p style="color: #ff4d4f; margin-top: 5px;">⚠️ 不是七鱼后台！是企业微信！</p>
             </div>
             
             <h3 style="margin: 15px 0 10px 0;">📖 使用步骤：</h3>
             <div class="step">
                 <span class="step-number">1</span>
-                在上方选择好日期周期
+                先在上方选择日期周期，点击"生成周期字符串"
             </div>
             <div class="step">
                 <span class="step-number">2</span>
-                登录企微后台，进入会话统计页面，选择对应日期范围
+                <strong>打开企业微信APP</strong>，进入"客户联系 → 数据统计 → 会话统计"页面
             </div>
             <div class="step">
                 <span class="step-number">3</span>
-                点击下方书签按钮抓取数据
+                <strong style="color: #07c160;">点击下方绿色书签按钮"企微数据"</strong>
             </div>
             
-            <h3 style="margin: 15px 0 10px 0;">🔗 书签脚本（带周期）：</h3>
-            <a class="bookmarklet" id="wechatBookmark" href="javascript:(function(){const period=document.getElementById('periodOutput')?document.getElementById('periodOutput').textContent.trim():'';const tables=document.querySelectorAll('table');let result='企微数据：\n';let weekData={sessions:0,orders:0,p4Orders:0};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('会话量'))weekData.sessions=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('派单'))weekData.orders=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('P4'))weekData.p4Orders=parseInt(value.replace(/[^0-9]/g,''))||0;}});});result+=`周期: ${period}\n`;result+=`会话量: ${weekData.sessions}\n派单工: ${weekData.orders}\nP4工: ${weekData.p4Orders}`;navigator.clipboard.writeText(result).then(()=>{alert('企微数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">📥 抓取企微数据</a>
+            <h3 style="margin: 15px 0 10px 0;">🟢 书签脚本（企微用）：</h3>
+            <a class="bookmarklet wechat-bookmark" id="wechatBookmark" href="javascript:(function(){const period=document.getElementById('periodOutput')?document.getElementById('periodOutput').textContent.trim():'';const tables=document.querySelectorAll('table');let result='企微数据：\n';let weekData={sessions:0,orders:0,p4Orders:0};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('会话量'))weekData.sessions=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('派单'))weekData.orders=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('P4'))weekData.p4Orders=parseInt(value.replace(/[^0-9]/g,''))||0;}});});result+=`周期: ${period}\n会话量: ${weekData.sessions}\n派单工: ${weekData.orders}\nP4工: ${weekData.p4Orders}`;navigator.clipboard.writeText(result).then(()=>{alert('企微数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">🟢 企微数据</a>
             
             <div class="tips">
-                <strong>💡 抓取前请确保：</strong>
+                <strong>💡 企微后台抓取要点：</strong>
                 <ul>
-                    <li>已在上方选择并生成了周期日期</li>
-                    <li>企微后台已选择相同的日期范围</li>
-                    <li>页面已加载完成，显示统计数据</li>
+                    <li>在企业微信的"会话统计"页面抓取</li>
+                    <li>选择日期范围后，等待数据加载完成</li>
+                    <li>点击绿色书签即可复制数据</li>
                 </ul>
             </div>
         </div>
 
         <!-- 第三步：电话数据抓取 -->
-        <h2>3️⃣ 网易七鱼电话数据</h2>
+        <h2>3️⃣ <span class="phone-label">网易七鱼</span> 电话数据</h2>
         <div class="section">
             <div class="info-box">
-                <div class="info-title">适用页面</div>
-                <p>网易七鱼 → 数据中心 → 呼叫中心 → 通话统计（筛选售后服务组）</p>
+                <div class="info-title">📍 适用页面</div>
+                <p><strong>网易七鱼后台</strong> → 数据中心 → 呼叫中心 → 通话统计</p>
+                <p style="color: #1890ff; margin-top: 5px;">💡 需要筛选"售后服务组"</p>
             </div>
             
             <h3 style="margin: 15px 0 10px 0;">📖 使用步骤：</h3>
             <div class="step">
                 <span class="step-number">1</span>
-                在上方选择好日期周期
+                先在上方选择日期周期，点击"生成周期字符串"
             </div>
             <div class="step">
                 <span class="step-number">2</span>
-                登录七鱼后台，筛选"售后服务组"，选择对应日期范围
+                <strong>打开网易七鱼后台</strong> → 数据中心 → 呼叫中心 → 通话统计
             </div>
             <div class="step">
                 <span class="step-number">3</span>
-                点击下方书签按钮抓取数据
+                <strong>筛选"售后服务组"</strong>，选择相同日期范围
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong style="color: #ff6a00;">点击下方橙色书签按钮"电话数据"</strong>
             </div>
             
-            <h3 style="margin: 15px 0 10px 0;">🔗 书签脚本（带周期）：</h3>
-            <a class="bookmarklet" id="phoneBookmark" href="javascript:(function(){const period=document.getElementById('periodOutput')?document.getElementById('periodOutput').textContent.trim():'';const tables=document.querySelectorAll('table');let result='电话数据：\n';let phoneData={calls:0,connectRate:'0%'};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('接入量')||label.includes('呼入量'))phoneData.calls=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('接通率')||label.includes('接通'))phoneData.connectRate=value;}});});result+=`周期: ${period}\n`;result+=`呼入量: ${phoneData.calls}\n接通率: ${phoneData.connectRate}`;navigator.clipboard.writeText(result).then(()=>{alert('电话数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">📞 抓取电话数据</a>
+            <h3 style="margin: 15px 0 10px 0;">🟠 书签脚本（七鱼用）：</h3>
+            <a class="bookmarklet phone-bookmark" id="phoneBookmark" href="javascript:(function(){const period=document.getElementById('periodOutput')?document.getElementById('periodOutput').textContent.trim():'';const tables=document.querySelectorAll('table');let result='电话数据：\n';let phoneData={calls:0,connectRate:'0%'};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('接入量')||label.includes('呼入量'))phoneData.calls=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('接通率')||label.includes('接通'))phoneData.connectRate=value;}});});result+=`周期: ${period}\n呼入量: ${phoneData.calls}\n接通率: ${phoneData.connectRate}`;navigator.clipboard.writeText(result).then(()=>{alert('电话数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">🟠 电话数据</a>
             
             <div class="tips">
-                <strong>💡 抓取前请确保：</strong>
+                <strong>💡 七鱼后台抓取要点：</strong>
                 <ul>
-                    <li>已在上方选择并生成了周期日期</li>
-                    <li>已筛选"售后服务组"</li>
-                    <li>页面已加载完成，显示统计数据</li>
+                    <li>进入"数据中心 → 呼叫中心 → 通话统计"</li>
+                    <li>筛选条件选择"售后服务组"</li>
+                    <li>选择日期范围后，点击橙色书签即可复制</li>
                 </ul>
             </div>
         </div>
@@ -134,62 +185,37 @@
         <h2>4️⃣ 二线解决率数据</h2>
         <div class="section">
             <div class="info-box">
-                <div class="info-title">适用页面</div>
+                <div class="info-title">📍 适用页面</div>
                 <p>二线解决率统计页面（Jira或内部系统）</p>
             </div>
             
             <h3 style="margin: 15px 0 10px 0;">🔗 书签脚本：</h3>
-            <a class="bookmarklet" href="javascript:(function(){const tables=document.querySelectorAll('table');let result='二线解决率数据：\n';let dataList=[];tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach((row,idx)=>{if(idx===0)return;const cells=row.querySelectorAll('td');if(cells.length>=5){const period=cells[0].innerText.trim();const orderCount=cells[1].innerText.trim();const dailyRate=cells[2].innerText.trim();const weeklyRate=cells[3].innerText.trim();if(period){dataList.push(`${period} | 工单:${orderCount} | 日解决率:${dailyRate} | 周解决率:${weeklyRate}`);}}});});result+=dataList.join('\n');navigator.clipboard.writeText(result).then(()=>{alert('二线解决率数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">📊 抓取二线解决率</a>
+            <a class="bookmarklet" href="javascript:(function(){const tables=document.querySelectorAll('table');let result='二线解决率数据：\n';let dataList=[];tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach((row,idx)=>{if(idx===0)return;const cells=row.querySelectorAll('td');if(cells.length>=5){const period=cells[0].innerText.trim();const orderCount=cells[1].innerText.trim();const dailyRate=cells[2].innerText.trim();const weeklyRate=cells[3].innerText.trim();if(period){dataList.push(`${period} | 工单:${orderCount} | 日解决率:${dailyRate} | 周解决率:${weeklyRate}`);}}});});result+=dataList.join('\n');navigator.clipboard.writeText(result).then(()=>{alert('二线解决率数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();">📊 二线解决率</a>
         </div>
 
-        <!-- 一键复制所有数据 -->
-        <h2>5️⃣ 一键抓取所有数据</h2>
+        <!-- 发送数据格式 -->
+        <h2>5️⃣ 发送数据给我</h2>
         <div class="section">
-            <div class="warning">
-                <div class="warning-title">⚠️ 重要提示</div>
-                <p>请确保已分别打开企微后台和七鱼后台页面，并且都选择了相同的日期范围。</p>
-            </div>
-            
-            <div class="step">
-                <span class="step-number">1</span>
-                先点击上方"企微数据"书签 → 企微后台页面
-            </div>
-            <div class="step">
-                <span class="step-number">2</span>
-                再点击上方"电话数据"书签 → 七鱼后台页面
-            </div>
-            <div class="step">
-                <span class="step-number">3</span>
-                最后将两次弹出的数据发给我
-            </div>
-            
             <div class="success">
-                <strong>✅ 发送格式</strong>
-                <p>直接发送抓取到的数据文本即可，我会自动识别并更新报表。</p>
-                <p>格式示例：</p>
-                <div class="code-block">企微数据：
-周期: 04.24-04.30
+                <strong>✅ 正确操作流程</strong>
+                <div style="margin-top: 10px;">
+                    <p><strong>第一步：</strong>在企业微信后台抓取企微数据（绿色书签）</p>
+                    <p><strong>第二步：</strong>在七鱼后台抓取电话数据（橙色书签）</p>
+                    <p><strong>第三步：</strong>将两次抓取的数据文本发给我</p>
+                </div>
+            </div>
+            
+            <h3 style="margin: 15px 0 10px 0;">📝 数据格式示例：</h3>
+            <div class="code-block">企微数据：
+周期: 26年(04.24-04.30日)
 会话量: 1525
 派单工: 391
 P4工: 216
 
 电话数据：
-周期: 04.24-04.30
+周期: 26年(04.24-04.30日)
 呼入量: 327
 接通率: 94%</div>
-            </div>
-        </div>
-
-        <!-- 备用手动脚本 -->
-        <h2>📋 备用手动脚本</h2>
-        <div class="section">
-            <p>如果书签无法正常工作，可以在浏览器控制台（F12 → Console）中粘贴以下代码执行：</p>
-            
-            <h3 style="margin: 15px 0 10px 0;">企微数据脚本：</h3>
-            <div class="code-block">javascript:(function(){const tables=document.querySelectorAll('table');let result='企微数据：\n';let weekData={sessions:0,orders:0,p4Orders:0};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('会话量'))weekData.sessions=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('派单'))weekData.orders=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('P4'))weekData.p4Orders=parseInt(value.replace(/[^0-9]/g,''))||0;}});});result+=`会话量: ${weekData.sessions}\n派单工: ${weekData.orders}\nP4工: ${weekData.p4Orders}`;navigator.clipboard.writeText(result).then(()=>{alert('数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();</div>
-            
-            <h3 style="margin: 15px 0 10px 0;">电话数据脚本：</h3>
-            <div class="code-block">javascript:(function(){const tables=document.querySelectorAll('table');let result='电话数据：\n';let phoneData={calls:0,connectRate:'0%'};tables.forEach(table=>{const rows=table.querySelectorAll('tr');rows.forEach(row=>{const cells=row.querySelectorAll('td,th');if(cells.length>=2){const label=cells[0].innerText.trim();const value=cells[cells.length-1].innerText.trim();if(label.includes('接入量')||label.includes('呼入量'))phoneData.calls=parseInt(value.replace(/[^0-9]/g,''))||0;if(label.includes('接通率')||label.includes('接通'))phoneData.connectRate=value;}});});result+=`呼入量: ${phoneData.calls}\n接通率: ${phoneData.connectRate}`;navigator.clipboard.writeText(result).then(()=>{alert('数据已复制！\n\n'+result);}).catch(()=>{prompt('请手动复制：',result);});})();</div>
         </div>
     </div>
 
@@ -231,12 +257,7 @@ P4工: 216
             let year = startDate.getFullYear();
             let yearStr = year.toString().slice(-2); // 取后两位
             
-            let period;
-            if (startMonth === endMonth) {
-                period = `${yearStr}年(${startMonth}.${startDay}-${endMonth}.${endDay}日)`;
-            } else {
-                period = `${yearStr}年(${startMonth}.${startDay}-${endMonth}.${endDay}日)`;
-            }
+            let period = `${yearStr}年(${startMonth}.${startDay}-${endMonth}.${endDay}日)`;
             
             document.getElementById('periodOutput').textContent = period;
         }
